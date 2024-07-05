@@ -6,7 +6,7 @@ import HomeRoute from '../components/HomeRoute.vue';
 import TestRoute from '../components/TestRoute.vue';
 
 const routes = [
-    { path: '/login', component: LoginComponent },
+    // { path: '/login', component: LoginComponent },
     { path: '/admin', component: AdminDashboard },
     { path: '/driver', component: DriverDashboard },
     { path: '/home', component: HomeRoute },
