@@ -13,6 +13,7 @@ class DriverPickup extends Model
         'pickup_status',
         'driver_id',
         'customer_prompt_id',
+        'pickup-date',
     ];
 
     public function driver()
