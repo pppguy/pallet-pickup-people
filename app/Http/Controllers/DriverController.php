@@ -39,7 +39,7 @@ class DriverController extends Controller
         return response()->json(['message' => 'Pickup claimed!']);
     }
 
-    public function ccompletePickup($pickupId)
+    public function completePickup($pickupId)
     {
         $pickup = DriverPickup::find($pickupId);
         $pickup->pickup_status = '1'; //complete
