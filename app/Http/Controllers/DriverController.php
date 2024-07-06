@@ -42,7 +42,7 @@ class DriverController extends Controller
     public function completePickup($pickupId)
     {
         $pickup = DriverPickup::find($pickupId);
-        $pickup->pickup_status = '1'; //complete
+        $pickup->pickup_status = 1; //complete
         $pickup->save();
         return response()->json(['message' => 'Pallets collected!']);
     }
