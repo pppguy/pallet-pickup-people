@@ -13,10 +13,10 @@ class DriverController extends Controller
 {
     public function dashboard()
     {
-        // $customers = CustomerPrompt::all();
-        // return Inertia::render('DriverDashboard', [
-        //     'customers' => $customers,
-        // ]);
+        $pickups = $this->getUpcomingPickups();
+        return Inertia::render('DriverDashboard', [
+            'pickups' => $pickups,
+        ]);
 
         //$this->getCustomersYES();
 
