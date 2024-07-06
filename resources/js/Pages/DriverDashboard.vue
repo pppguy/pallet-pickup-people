@@ -65,7 +65,7 @@ export default {
 
     const claimPickup = async (pickupId) => {
       try {
-        await axios.post(`/api/driver/pickups/${pickupId}/claim`);
+        await axios.post(`/driver/pickups/${pickupId}/claim`);
         alert('Pickup claimed!');
         pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
       } catch (error) {
