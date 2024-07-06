@@ -27,15 +27,18 @@ class DriverController extends Controller
 
     public function claimPickup($pickupId)
     {
-        // Logic to claim the pickup
         $pickup = DriverPickup::find($pickupId);
-        $pickup->status = 'claimed'; // Update status as needed
+        $pickup->driver_id = auth()->id();
         $pickup->save();
         return response()->json(['message' => 'Pickup claimed!']);
     }
 
-    public function confirmPickup($pickupId)
+    public function ccompletePickup($pickupId)
     {
+        $pickup = DriverPickup::find($pickupId);
+        $pickup->pickup_status = '1'; //complete
+        $pickup->save();
+        return response()->json(['message' => 'Pallets collected!']);
     }
 
     public function getCustomersYES()
