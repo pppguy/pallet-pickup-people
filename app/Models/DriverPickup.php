@@ -10,7 +10,7 @@ class DriverPickup extends Model
     use HasFactory;
 
     protected $fillable = [
-        'pickup_status',
+        'pickup_status', // 0 pending, 1 complete, -1 cancelled
         'driver_id',
         'customer_prompt_id',
         'pickup-date',
