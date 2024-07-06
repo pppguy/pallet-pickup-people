@@ -28,6 +28,12 @@ class DriverController extends Controller
     public function claimPickup($pickupId)
     {
         $pickup = DriverPickup::find($pickupId);
+
+        if (!is_null($pickup->driver_id)) {
+            return response()->json(['message' => 'Pickup has already been claimed by ' . $pickup->driver->name]);
+        }
+
+
         $pickup->driver_id = auth()->id();
         $pickup->save();
         return response()->json(['message' => 'Pickup claimed!']);
