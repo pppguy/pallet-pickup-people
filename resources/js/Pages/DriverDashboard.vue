@@ -23,15 +23,20 @@
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Claimed By
+                  </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="customer in customers" :key="customer.id">
-                  <td class="px-6 py-4 whitespace-nowrap">{{ customer.name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ customer.pickup_date }}</td>
+                <tr v-for="pickup in pickups" :key="pickup.id">
+                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.pickup_date }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <button class="bg-green-500 text-white px-4 py-2 rounded" @click="claimPickup(customer.id)">Claim Pickup</button>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded" @click="claimPickup(pickup.id)">Claim Pickup</button>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded" @click="completePickup(pickup.id)">Complete Pickup</button>
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.driver ? pickup.driver.name : 'Unclaimed' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -45,23 +50,40 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 
 export default {
   setup() {
-    const customers = ref([]);
+    const pickups = ref([]);
     const { props } = usePage();
 
     onMounted(() => {
-      customers.value = props.value.customers;
+      pickups.value = props.pickups;
     });
 
-    const claimPickup = async (customerId) => {
-      await axios.post(`/api/driver/customers/${customerId}/claim`);
-      alert('Pickup claimed!');
-      customers.value = customers.value.filter(customer => customer.id !== customerId);
+    console.log(props.pickups);
+
+    const claimPickup = async (pickupId) => {
+      try {
+        await axios.post(`/api/driver/pickups/${pickupId}/claim`);
+        alert('Pickup claimed!');
+        pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
     };
 
-    return { customers, claimPickup };
+    const completePickup = async (pickupId) => {
+      try {
+        await axios.post(`/api/driver/pickups/${pickupId}/complete`);
+        alert('Pickup completed!');
+        pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    };
+
+    return { pickups, claimPickup, completePickup };
   }
 };
 </script>

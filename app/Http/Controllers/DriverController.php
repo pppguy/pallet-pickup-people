@@ -61,7 +61,9 @@ class DriverController extends Controller
         $today = Carbon::today();
 
         //only get pickups where the pickup date is today or later
-        $pickups = DriverPickup::where('pickup_date', '>=', $today)->get();
+        $pickups = DriverPickup::where('pickup_date', '>=', $today)
+            ->with('customerPrompt.customer', 'driver')
+            ->get();
 
         return $pickups;
     }
