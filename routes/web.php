@@ -32,7 +32,8 @@ Route::middleware('auth')->group(function () {
 
     // Driver routes
     Route::get('/driver', [DriverController::class, 'dashboard'])->name('driver.dashboard');
-    Route::post('/api/driver/customers/{customer}/claim', [DriverController::class, 'claimPickup']);
+    Route::post('/driver/pickups/{pickupId}/claim', [DriverController::class, 'claimPickup']);
+    Route::post('/driver/pickups/{pickupId}/complete', [DriverController::class, 'completePickup']);
 });
 
 require __DIR__ . '/auth.php';
