@@ -33,9 +33,21 @@
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.pickup_date }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <button v-if="!pickup.driver" class="bg-green-500 text-white px-4 py-2 rounded" @click="claimPickup(pickup.id)">Claim Pickup</button>
-                    <button v-else class="bg-gray-500 text-white px-4 py-2 rounded" disabled>Pickup Claimed</button>
-                    <button class="bg-green-500 text-white px-4 py-2 rounded" @click="completePickup(pickup.id)">Complete Pickup</button>
+                    <button 
+                      v-if="!pickup.driver"
+                      class="bg-green-500 text-white px-4 py-2 rounded" 
+                      @click="claimPickup(pickup.id)"
+                      
+                    >                    
+                      Claim Pickup
+                    </button>
+                    <button 
+                      v-if="pickup.driver && pickup.driver.id === user.id"
+                      class="bg-green-500 text-white px-4 py-2 rounded" 
+                      @click="completePickup(pickup.id)"
+                    >
+                      Complete Pickup
+                    </button>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.driver ? pickup.driver.name : 'Unclaimed' }}</td>
                 </tr>
@@ -57,6 +69,7 @@ export default {
   setup() {
     const pickups = ref([]);
     const { props } = usePage();
+    const user = ref(props.user);
 
     onMounted(() => {
       pickups.value = props.pickups;
@@ -76,7 +89,7 @@ export default {
 
     const completePickup = async (pickupId) => {
       try {
-        await axios.post(`/api/driver/pickups/${pickupId}/complete`);
+        await axios.post(`/driver/pickups/${pickupId}/complete`);
         alert('Pickup completed!');
         pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
       } catch (error) {
@@ -84,7 +97,7 @@ export default {
       }
     };
 
-    return { pickups, claimPickup, completePickup };
+    return { pickups, user, claimPickup, completePickup };
   }
 };
 </script>

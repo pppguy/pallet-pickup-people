@@ -14,8 +14,11 @@ class DriverController extends Controller
     public function dashboard()
     {
         $pickups = $this->getUpcomingPickups();
+        $user = auth()->user();
+
         return Inertia::render('DriverDashboard', [
             'pickups' => $pickups,
+            'user' => $user,
         ]);
 
         //$this->getCustomersYES();
