@@ -21,6 +21,9 @@
                     Pickup Date
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Address
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -32,6 +35,10 @@
                 <tr v-for="pickup in pickups" :key="pickup.id">
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.pickup_date }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <!-- {{ pickup.customer_prompt.customer.address }}  -->
+                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">View on Map</a>
+                  </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <button 
                       v-if="!pickup.driver"
