@@ -75,13 +75,26 @@ export default {
       pickups.value = props.pickups;
     });
 
+    console.log('pickups');
     console.log(props.pickups);
+
+    console.log('======');
+    console.log('user');
+    console.log(props.user);
 
     const claimPickup = async (pickupId) => {
       try {
         await axios.post(`/driver/pickups/${pickupId}/claim`);
         alert('Pickup claimed!');
-        pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
+ 
+        // Update the pickup object
+        pickups.value = pickups.value.map(pickup => {
+          if (pickup.id === pickupId) {
+            pickup.driver = user.value; // Assign the current user as the driver
+            pickup.driver_id = user.value.id;
+          }
+          return pickup;
+        });
       } catch (error) {
         alert(error.response.data.message);
       }
