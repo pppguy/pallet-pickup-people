@@ -34,7 +34,7 @@
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="pickup in pickups" :key="pickup.id">
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.pickup_date }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <!-- {{ pickup.customer_prompt.customer.address }}  -->
                     <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">View on Map</a>
@@ -71,6 +71,10 @@
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
+dayjs.extend(advancedFormat);
 
 export default {
   setup() {
@@ -88,6 +92,16 @@ export default {
     console.log('======');
     console.log('user');
     console.log(props.user);
+
+    const formatPickupDate = (date) => {
+      const today = dayjs().startOf('day');
+      const pickupDay = dayjs(date).startOf('day');
+
+      if (pickupDay.isSame(today)) {
+        return 'Today';
+      }
+      return dayjs(date).format('MMMM D');
+    };
 
     const claimPickup = async (pickupId) => {
       try {
@@ -117,7 +131,7 @@ export default {
       }
     };
 
-    return { pickups, user, claimPickup, completePickup };
+    return { pickups, user, claimPickup, completePickup, formatPickupDate };
   }
 };
 </script>
