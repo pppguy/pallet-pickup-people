@@ -14,32 +14,32 @@
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Customer Name
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Pickup Date
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Address
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Pickup Actions
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Claimed By
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="pickup in pickups" :key="pickup.id">
-                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-4 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
+                  <td class="px-4 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
+                  <td class="px-4 py-4 whitespace-nowrap text-center">
                     <!-- {{ pickup.customer_prompt.customer.address }}  -->
-                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">View on Map</a>
+                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">Map</a>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-4 py-4 whitespace-nowrap">
                     <button 
                       v-if="!pickup.driver"
                       class="bg-amber-300 text-white px-4 py-2 rounded w-28" 
@@ -56,7 +56,7 @@
                       Complete
                     </button>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ pickup.driver ? pickup.driver.name : 'Unclaimed' }}</td>
+                  <td class="px-4 py-4 whitespace-nowrap">{{ pickup.driver ? pickup.driver.name : 'Unclaimed' }}</td>
                 </tr>
               </tbody>
             </table>
