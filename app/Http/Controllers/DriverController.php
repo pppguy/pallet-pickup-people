@@ -65,6 +65,7 @@ class DriverController extends Controller
 
         //only get pickups where the pickup date is today or later
         $pickups = DriverPickup::where('pickup_date', '>=', $today)
+            ->where('pickup_status', 0)
             ->with('customerPrompt.customer', 'driver')
             ->get();
 
