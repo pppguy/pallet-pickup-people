@@ -24,7 +24,7 @@
                     Address
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    Pickup Actions
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Claimed By
@@ -42,18 +42,18 @@
                   <td class="px-6 py-4 whitespace-nowrap">
                     <button 
                       v-if="!pickup.driver"
-                      class="bg-green-500 text-white px-4 py-2 rounded" 
+                      class="bg-green-500 text-white px-4 py-2 rounded w-28" 
                       @click="claimPickup(pickup.id)"
                       
                     >                    
-                      Claim Pickup
+                      Claim
                     </button>
                     <button 
                       v-if="pickup.driver && pickup.driver.id === user.id"
-                      class="bg-green-500 text-white px-4 py-2 rounded" 
+                      class="bg-green-500 text-white px-4 py-2 rounded w-28" 
                       @click="completePickup(pickup.id)"
                     >
-                      Complete Pickup
+                      Complete
                     </button>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ pickup.driver ? pickup.driver.name : 'Unclaimed' }}</td>
