@@ -9,8 +9,10 @@
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-white border-b border-gray-200">
-            <h1>Driver Dashboard</h1>
+          <div class="py-6 bg-white border-b border-gray-200">
+            <div class="p-4">
+              <h1>Driver Dashboard</h1>
+            </div>            
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
@@ -33,7 +35,7 @@
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="pickup in pickups" :key="pickup.id">
-                  <td class="px-4 py-4 whitespace-nowrap">{{ pickup.customer_prompt.customer.name }}</td>
+                  <td class="px-4 py-4 whitespace-normal break-words">{{ pickup.customer_prompt.customer.name }}</td>
                   <td class="px-4 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
                   <td class="px-4 py-4 whitespace-nowrap text-center">
                     <!-- {{ pickup.customer_prompt.customer.address }}  -->
