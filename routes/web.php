@@ -29,6 +29,10 @@ Route::middleware('auth')->group(function () {
     // Admin routes
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('/api/admin/customers/{customer}/reminder', [AdminController::class, 'sendReminder']);
+    Route::get('/admin/customers/status', [AdminController::class, 'getCustomerStatusData'])->name('admin.customers.status');
+    Route::post('/admin/customers/{customer}/update', [AdminController::class, 'updateCustomer'])->name('admin.customers.update');
+    Route::post('/admin/customers/{customer}/reminder', [AdminController::class, 'sendReminder'])->name('admin.customers.reminder');
+
 
     // Driver routes
     Route::get('/driver', [DriverController::class, 'dashboard'])->name('driver.dashboard');
