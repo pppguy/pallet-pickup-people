@@ -1,3 +1,60 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'; // Adjust the import path as needed
+
+dayjs.extend(advancedFormat);
+
+const pickups = ref([]);
+const { props } = usePage();
+const user = ref(props.user);
+
+onMounted(() => {
+  pickups.value = props.pickups;
+});
+
+const formatPickupDate = (date) => {
+  const today = dayjs().startOf('day');
+  const pickupDay = dayjs(date).startOf('day');
+
+  if (pickupDay.isSame(today)) {
+    return 'Today';
+  }
+  return dayjs(date).format('MMMM D');
+};
+
+const claimPickup = async (pickupId) => {
+  try {
+    await axios.post(`/driver/pickups/${pickupId}/claim`);
+    alert('Pickup claimed!');
+
+    // Update the pickup object
+    pickups.value = pickups.value.map(pickup => {
+      if (pickup.id === pickupId) {
+        pickup.driver = user.value; // Assign the current user as the driver
+        pickup.driver_id = user.value.id;
+      }
+      return pickup;
+    });
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+};
+
+const completePickup = async (pickupId) => {
+  try {
+    await axios.post(`/driver/pickups/${pickupId}/complete`);
+    alert('Pickup completed!');
+    pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+};
+</script>
+
 <template>
   <AuthenticatedLayout>
     <template #header>
@@ -38,7 +95,6 @@
                   <td class="px-4 py-4 whitespace-normal break-words">{{ pickup.customer_prompt.customer.name }}</td>
                   <td class="px-4 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
                   <td class="px-4 py-4 whitespace-nowrap text-center">
-                    <!-- {{ pickup.customer_prompt.customer.address }}  -->
                     <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">Map</a>
                   </td>
                   <td class="px-4 py-4 whitespace-nowrap">
@@ -46,7 +102,6 @@
                       v-if="!pickup.driver"
                       class="bg-amber-300 text-white px-4 py-2 rounded w-28" 
                       @click="claimPickup(pickup.id)"
-                      
                     >                    
                       Claim
                     </button>
@@ -68,75 +123,6 @@
     </div>
   </AuthenticatedLayout>
 </template>
-
-<script>
-import { ref, onMounted } from 'vue';
-import { usePage } from '@inertiajs/vue3';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import advancedFormat from 'dayjs/plugin/advancedFormat';
-
-dayjs.extend(advancedFormat);
-
-export default {
-  setup() {
-    const pickups = ref([]);
-    const { props } = usePage();
-    const user = ref(props.user);
-
-    onMounted(() => {
-      pickups.value = props.pickups;
-    });
-
-    console.log('pickups');
-    console.log(props.pickups);
-
-    console.log('======');
-    console.log('user');
-    console.log(props.user);
-
-    const formatPickupDate = (date) => {
-      const today = dayjs().startOf('day');
-      const pickupDay = dayjs(date).startOf('day');
-
-      if (pickupDay.isSame(today)) {
-        return 'Today';
-      }
-      return dayjs(date).format('MMMM D');
-    };
-
-    const claimPickup = async (pickupId) => {
-      try {
-        await axios.post(`/driver/pickups/${pickupId}/claim`);
-        alert('Pickup claimed!');
- 
-        // Update the pickup object
-        pickups.value = pickups.value.map(pickup => {
-          if (pickup.id === pickupId) {
-            pickup.driver = user.value; // Assign the current user as the driver
-            pickup.driver_id = user.value.id;
-          }
-          return pickup;
-        });
-      } catch (error) {
-        alert(error.response.data.message);
-      }
-    };
-
-    const completePickup = async (pickupId) => {
-      try {
-        await axios.post(`/driver/pickups/${pickupId}/complete`);
-        alert('Pickup completed!');
-        pickups.value = pickups.value.filter(pickup => pickup.id !== pickupId);
-      } catch (error) {
-        alert(error.response.data.message);
-      }
-    };
-
-    return { pickups, user, claimPickup, completePickup, formatPickupDate };
-  }
-};
-</script>
 
 <style scoped>
 </style>
