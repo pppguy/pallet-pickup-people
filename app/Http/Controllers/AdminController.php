@@ -58,6 +58,34 @@ class AdminController extends Controller
         return response()->json($customers);
     }
 
+    public function updateCustomer(Request $request, $customerId)
+    {
+        //TODO: validation
+
+        try {
+            // Find the customer by ID
+            $customer = Customer::findOrFail($customerId);
+
+            // Update the customer attributes
+            $customer->name = $request->input('name');
+            $customer->address = $request->input('address');
+            $customer->pickup_day = $request->input('pickup_day');
+            $customer->pickup_frequency = $request->input('pickup_frequency');
+            $customer->contact_method = $request->input('contact_method');
+            $customer->contact_email = $request->input('contact_email');
+            $customer->contact_phone = $request->input('contact_phone');
+
+            // Save the updated customer
+            $customer->save();
+
+            // Return a success response
+            return response()->json(['message' => 'Customer updated successfully', 'customer' => $customer]);
+        } catch (\Exception $e) {
+            // Handle any exceptions or errors
+            return response()->json(['error' => 'Error updating customer: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function sendReminder($customerId)
     {
         // Retrieve the customer by ID

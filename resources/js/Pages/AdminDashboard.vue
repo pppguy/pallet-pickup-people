@@ -30,11 +30,23 @@ const closeModal = () => {
 
 const updateCustomer = async () => {
   try {
-    await axios.post(`/admin/customers/${selectedCustomer.value.id}/update`, selectedCustomer.value);
+    const response = await axios.post(`/admin/customers/${selectedCustomer.value.id}/update`, {
+      name: selectedCustomer.value.name,
+      email: selectedCustomer.value.email,
+      address: selectedCustomer.value.address,
+      pickup_day: selectedCustomer.value.pickup_day,
+      pickup_frequency: selectedCustomer.value.pickup_frequency,
+      contact_method: selectedCustomer.value.contact_method,
+      contact_email: selectedCustomer.value.contact_email,
+      contact_phone: selectedCustomer.value.contact_phone,
+    });
+
+    //refresh customers
+    const statusResponse = await axios.get('/admin/customers/status');
+    customers.value = statusResponse.data;
+
     alert('Customer updated successfully');
     closeModal();
-    const response = await axios.get('/admin/customers/status');
-    customers.value = response.data;
   } catch (error) {
     alert('Error updating customer');
   }
