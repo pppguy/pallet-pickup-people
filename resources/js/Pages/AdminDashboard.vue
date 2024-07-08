@@ -1,7 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'; // Adjust the import path as needed
+
+dayjs.extend(advancedFormat);
 
 
 const customers = ref([]);
@@ -17,6 +21,23 @@ onMounted(async () => {
   console.log('mounted customers');
   console.log(customers.value);
 });
+
+const formatPickupDate = (date) => {
+  if (!date) {
+    return 'Invalid Date';
+  }
+
+  const today = dayjs().startOf('day');
+  const pickupDay = dayjs(date).startOf('day');
+
+  // if (pickupDay.isSame(today)) {
+  //   return 'Today';
+  // }
+  return dayjs(date).format('MMMM D, YYYY h:mm A');
+  //return dayjs(date).format('MMMM D');
+
+
+};
 
 const openModal = (customer) => {
   selectedCustomer.value = { ...customer };
@@ -58,7 +79,15 @@ const sendReminder = async (customerId) => {
     console.log(customerId);
     //await axios.post(`/admin/customers/${customerId}/reminder`);
     await axios.get(`/admin/customers/${customerId}/reminder`);
+
+
+    //refresh customers
+    const statusResponse = await axios.get('/admin/customers/status');
+    customers.value = statusResponse.data;
+
     alert('Reminder sent successfully');
+
+    
   } catch (error) {
     alert('Error sending reminder');
   }
@@ -69,8 +98,10 @@ const getPickupDay = (dayIndex) => {
 };
 
 const getLastPickup = (latestPickup) => {
+  console.log('latest pickup');
+  console.log(latestPickup);
   if (latestPickup) {
-    return latestPickup.created_at;
+    return formatPickupDate(latestPickup.updated_at);
   }
   return 'N/A';
 };
@@ -110,7 +141,7 @@ const getCurrentStatus = (latestPrompt) => {
                     Pickup Day
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Frequency
+                    Freq
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Last Successful Pickup
@@ -130,10 +161,13 @@ const getCurrentStatus = (latestPrompt) => {
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ getPickupDay(customer.customer.pickup_day) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ customer.customer.pickup_frequency }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ getLastPickup(customer.latestPickup) }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ getCurrentStatus(customer.latestPrompt) }}</td>
+                  <td class="px-6 py-4 whitespace-normal">{{ getLastPickup(customer.lastSuccessfulPickup) }}</td>
+                  <!-- <td class="px-6 py-4 whitespace-nowrap">{{ getCurrentStatus(customer.latestPrompt) }}</td> -->
+                  <td class="px-6 py-4 whitespace-nowrap">{{ customer.current_status }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <button @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button>
+                    <!-- <button v-if="customer.latestPickup" @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button> -->
+                    <!-- <button v-if="customer.latestPickup && customer.latestPickup.pickup_status === 1" @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button> -->
                   </td>
                 </tr>
               </tbody>

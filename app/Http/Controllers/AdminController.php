@@ -40,19 +40,56 @@ class AdminController extends Controller
                 return [
                     'customer' => $customer,
                     'latestPrompt' => $latestPrompt,
-                    'latestPickup' => $latestPickup
+                    'latestPickup' => $latestPickup,
+                    'lastSuccessfulPickup' => $this->getLastSuccessfulPickupDate($customer->last_successful_pickup_id),
+                    'current_status' => $this->calculateStatus($latestPickup),
                 ];
             });
 
         return response()->json($customers);
     }
 
+
+    public function getLastSuccessfulPickupDate($pickupId)
+    {
+        if ($pickupId == null) {
+            return null;
+        }
+
+        $customer = DriverPickup::findOrFail($pickupId);
+        return $customer;
+    }
+
+    public function calculateStatus($latestPickup)
+    {
+        try {
+            if ($latestPickup == null) {
+                return "Reminder Sent";
+            } else {
+                if ($latestPickup->driver_id == null) {
+                    return "Pickup Created";
+                } else {
+                    if ($latestPickup->pickup_status == 1) {
+                        return "Pickup Complete";
+                    } else {
+                        return "Assigned to " . $latestPickup->driver->name;
+                    }
+                }
+            }
+            return "Nothing yet";
+        } catch (\Exception $e) {
+        }
+
+        return "Nothing yet";
+    }
+
+
+
     public function updateCustomer(Request $request, $customerId)
     {
         //TODO: validation
 
         try {
-            // Find the customer by ID
             $customer = Customer::findOrFail($customerId);
 
             // Update the customer attributes
@@ -64,20 +101,16 @@ class AdminController extends Controller
             $customer->contact_email = $request->input('contact_email');
             $customer->contact_phone = $request->input('contact_phone');
 
-            // Save the updated customer
             $customer->save();
 
-            // Return a success response
             return response()->json(['message' => 'Customer updated successfully', 'customer' => $customer]);
         } catch (\Exception $e) {
-            // Handle any exceptions or errors
             return response()->json(['error' => 'Error updating customer: ' . $e->getMessage()], 500);
         }
     }
 
     public function sendReminder($customerId)
     {
-        // Retrieve the customer by ID
         $customer = Customer::find($customerId);
 
 

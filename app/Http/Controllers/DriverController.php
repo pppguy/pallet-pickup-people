@@ -44,10 +44,24 @@ class DriverController extends Controller
 
     public function completePickup($pickupId)
     {
-        $pickup = DriverPickup::find($pickupId);
-        $pickup->pickup_status = 1; //complete
+        $pickup = DriverPickup::with('customerPrompt')->find($pickupId);
+
+        if (!$pickup) {
+            return response()->json(['error' => 'Driver Pickup not found.'], 404);
+        }
+
+        $pickup->pickup_status = 1; // Completed status
         $pickup->save();
-        return response()->json(['message' => 'Pallets collected!']);
+
+        if (!$pickup->customerPrompt) {
+            return response()->json(['error' => 'Customer Prompt not found.'], 404);
+        }
+
+        $customer = Customer::findOrFail($pickup->customerPrompt->customer_id);
+        $customer->last_successful_pickup_id = $pickup->id;
+        $customer->save();
+
+        return response()->json(['message' => 'Pallets collected successfully!']);
     }
 
     public function getCustomersYES()
