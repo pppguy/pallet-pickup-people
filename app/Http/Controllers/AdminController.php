@@ -56,8 +56,8 @@ class AdminController extends Controller
             return null;
         }
 
-        $customer = DriverPickup::findOrFail($pickupId);
-        return $customer;
+        $pickup = DriverPickup::findOrFail($pickupId);
+        return $pickup;
     }
 
     public function calculateStatus($latestPickup)
