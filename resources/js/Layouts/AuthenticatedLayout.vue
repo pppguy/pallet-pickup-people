@@ -25,6 +25,7 @@ const showingNavigationDropdown = ref(false);
                                         class="block h-9 w-auto fill-current text-gray-800"
                                     />
                                 </Link>
+                                <span class="ml-3 text-xl font-bold text-gray-800">Pallet Pickup People</span>
                             </div>
 
                             <!-- Navigation Links -->
