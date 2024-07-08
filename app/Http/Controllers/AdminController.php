@@ -37,12 +37,13 @@ class AdminController extends Controller
             ->map(function ($customer) {
                 $latestPrompt = $customer->prompts->first();
                 $latestPickup = $latestPrompt ? $latestPrompt->driverPickups->first() : null;
+                $lastSuccessfulPickup = $this->getLastSuccessfulPickup($customer->last_successful_pickup_id);
                 return [
                     'customer' => $customer,
                     'latestPrompt' => $latestPrompt,
                     'latestPickup' => $latestPickup,
-                    'lastSuccessfulPickup' => $this->getLastSuccessfulPickupDate($customer->last_successful_pickup_id),
-                    'current_status' => $this->calculateStatus($latestPickup),
+                    'lastSuccessfulPickup' => $lastSuccessfulPickup,
+                    'current_status' => $this->calculateStatus($latestPickup, $lastSuccessfulPickup, $latestPrompt),
                 ];
             });
 
@@ -50,7 +51,7 @@ class AdminController extends Controller
     }
 
 
-    public function getLastSuccessfulPickupDate($pickupId)
+    public function getLastSuccessfulPickup($pickupId)
     {
         if ($pickupId == null) {
             return null;
@@ -60,11 +61,18 @@ class AdminController extends Controller
         return $pickup;
     }
 
-    public function calculateStatus($latestPickup)
+    public function calculateStatus($latestPickup, $lastSuccessfulPickup, $latestPrompt)
     {
         try {
             if ($latestPickup == null) {
-                return "Reminder Sent";
+                //if ($latestPrompt->created_at > )
+                if ($latestPrompt != null) {
+                    if ($latestPrompt->created_at > $lastSuccessfulPickup->updated_at) {
+                        return "Reminder Sent";
+                    } else {
+                        return "Nothing yet";
+                    }
+                }
             } else {
                 if ($latestPickup->driver_id == null) {
                     return "Pickup Created";

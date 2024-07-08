@@ -165,7 +165,7 @@ const getCurrentStatus = (latestPrompt) => {
                   <!-- <td class="px-6 py-4 whitespace-nowrap">{{ getCurrentStatus(customer.latestPrompt) }}</td> -->
                   <td class="px-6 py-4 whitespace-nowrap">{{ customer.current_status }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <button @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button>
+                    <button v-if="['Pickup Complete', 'Nothing yet'].includes(customer.current_status)" @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button>
                     <!-- <button v-if="customer.latestPickup" @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button> -->
                     <!-- <button v-if="customer.latestPickup && customer.latestPickup.pickup_status === 1" @click="sendReminder(customer.customer.id)" class="bg-blue-500 text-white px-4 py-2 rounded">Send Reminder</button> -->
                   </td>
