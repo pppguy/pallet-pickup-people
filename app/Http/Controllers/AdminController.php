@@ -108,7 +108,12 @@ class AdminController extends Controller
             // Handle other cases
         }
 
-        // Optionally, redirect to another route or return a view
-        //return redirect()->route('your.redirect.route');
+        // Redirect to the thank you page
+        return redirect()->route('thank-you');
+    }
+
+    public function thankYouPage()
+    {
+        return view('thank-you');
     }
 }

@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/customers/{customer}/update', [AdminController::class, 'updateCustomer'])->name('admin.customers.update');
     Route::get('/admin/customers/{customerId}/reminder', [AdminController::class, 'sendReminder']);
     Route::get('/customer/response/{response}/{id}', [AdminController::class, 'handleResponse'])->name('customer.response');
-
+    Route::get('/thank-you', [AdminController::class, 'thankYouPage'])->name('thank-you');
 
 
     // Driver routes
