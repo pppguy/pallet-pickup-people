@@ -156,7 +156,7 @@ const getCurrentStatus = (latestPrompt) => {
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="customer in customers" :key="customer.customer.id">
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-normal">
                     <button @click="openModal(customer.customer)" class="text-blue-500">{{ customer.customer.name }}</button>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">{{ getPickupDay(customer.customer.pickup_day) }}</td>
