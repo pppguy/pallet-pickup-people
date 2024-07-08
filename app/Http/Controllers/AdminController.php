@@ -22,17 +22,6 @@ class AdminController extends Controller
         ]);
     }
 
-    // public function getCustomerStatusData() {
-    //     // Get today's date
-    //     $today = Carbon::today();
-
-    //     //only get pickups where the pickup date is today or later
-    //     $data = Customer::with('customerPrompt.customer', 'driver')
-    //         ->get();
-
-    //     return $data;
-    // }
-
     public function getCustomerStatusData()
     {
         $customers = Customer::select('customers.*')
