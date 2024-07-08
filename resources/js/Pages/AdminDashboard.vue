@@ -42,7 +42,10 @@ const updateCustomer = async () => {
 
 const sendReminder = async (customerId) => {
   try {
-    await axios.post(`/admin/customers/${customerId}/reminder`);
+    console.log('sending remind');
+    console.log(customerId);
+    //await axios.post(`/admin/customers/${customerId}/reminder`);
+    await axios.get(`/admin/customers/${customerId}/reminder`);
     alert('Reminder sent successfully');
   } catch (error) {
     alert('Error sending reminder');
