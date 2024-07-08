@@ -69,8 +69,19 @@ const completePickup = async (pickupId) => {
           <div class="py-6 bg-white border-b border-gray-200">
             <div class="p-4">
               <h1>Currently active pickups</h1>
-            </div>            
-            <table class="min-w-full divide-y divide-gray-200">
+            </div>          
+            <div v-if="pickups.length === 0" class="p-4 text-center text-gray-500">
+              <div>
+              No pickups available. Have a nice day!
+              </div>
+              <div class="text-6xl mt-4">
+                😎
+              </div>
+
+            </div>
+
+
+            <table v-if="pickups.length > 0" class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
                   <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
