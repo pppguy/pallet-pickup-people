@@ -66,9 +66,8 @@ class AdminController extends Controller
     {
         try {
             if ($latestPickup == null) {
-                //if ($latestPrompt->created_at > )
                 if ($latestPrompt != null) {
-                    if ($latestPrompt->created_at > $lastSuccessfulPickup->updated_at) {
+                    if ($lastSuccessfulPickup == null || $latestPrompt->created_at > $lastSuccessfulPickup->updated_at) {
                         return "Reminder Sent";
                     } else {
                         return "Nothing yet";
