@@ -10,7 +10,7 @@ use App\Models\DriverPickup;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Carbon\Carbon;
-
+use DateTime;
 
 class AdminController extends Controller
 {
@@ -133,12 +133,35 @@ class AdminController extends Controller
         $customerPrompt->response = Null; // Initial status
         $customerPrompt->save();
 
+        // $formattedDate = date("F j, Y", strtotime($customer->pickup_day));
+        $formattedDate = $this->calculateDateFromDayOfWeek($customer->pickup_day);
+
+
         // Send the email
-        Mail::to($customer->contact_email)->send(new CustomerReminder($customerPrompt));
+        Mail::to($customer->contact_email)->send(new CustomerReminder($customerPrompt, $formattedDate, $customer->name));
 
         $test = $customer->contact_email;
 
         return response()->json(['message' => 'Reminder sent!']);
+    }
+
+    public function calculateDateFromDayOfWeek(int $day)
+    {
+        $today = new DateTime(); // Current date and time
+
+        $currentDayOfWeek = (int) $today->format('w'); // Get current day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+
+        // Calculate the number of days to add to get to the next occurrence of $targetDayOfWeek
+        $daysToAdd = ($day - $currentDayOfWeek + 7) % 7;
+
+        // Clone today's date and add the calculated days to find the next occurrence
+        $nextDate = clone $today;
+        $nextDate->modify("+$daysToAdd days");
+
+        // Format the next date as desired
+        $nextDateFormatted = $nextDate->format('F j, Y');
+
+        return $nextDateFormatted;
     }
 
     // YES or NO from customer

@@ -14,13 +14,17 @@ class CustomerReminder extends Mailable
     use Queueable, SerializesModels;
 
     public $customerPrompt;
+    public $emailDate;
+    public $customerName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($customerPrompt)
+    public function __construct($customerPrompt, $emailDate, $customerName)
     {
         $this->customerPrompt = $customerPrompt;
+        $this->emailDate = $emailDate;
+        $this->customerName = $customerName;
     }
 
     /**
@@ -43,6 +47,8 @@ class CustomerReminder extends Mailable
             with: [
                 'yesUrl' => route('customer.response', ['response' => 'YES', 'id' => $this->customerPrompt->id]),
                 'noUrl' => route('customer.response', ['response' => 'NO', 'id' => $this->customerPrompt->id]),
+                'date' => $this->emailDate,
+                'customerName' => $this->customerName,
             ],
         );
     }
