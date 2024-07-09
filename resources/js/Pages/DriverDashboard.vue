@@ -104,7 +104,7 @@ const completePickup = async (pickupId) => {
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="pickup in pickups" :key="pickup.id">
                   <td class="px-4 py-4 whitespace-normal break-words">{{ pickup.customer_prompt.customer.name }}</td>
-                  <td class="px-4 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.pickup_date) }}</td>
+                  <td class="px-4 py-4 whitespace-nowrap">{{ formatPickupDate(pickup.customer_prompt.pickup_date) }}</td>
                   <td class="px-4 py-4 whitespace-nowrap text-center">
                     <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(pickup.customer_prompt.customer.address)" target="_blank" class="text-blue-500">Map</a>
                   </td>
