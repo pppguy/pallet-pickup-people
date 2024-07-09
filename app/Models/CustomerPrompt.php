@@ -12,6 +12,7 @@ class CustomerPrompt extends Model
     protected $fillable = [
         'customer_id',
         'response',
+        'pickup_date',
     ];
 
     public function customer()

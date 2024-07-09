@@ -20,10 +20,9 @@ class CustomerReminder extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($customerPrompt, $emailDate, $customerName)
+    public function __construct($customerPrompt, $customerName)
     {
         $this->customerPrompt = $customerPrompt;
-        $this->emailDate = $emailDate;
         $this->customerName = $customerName;
     }
 
@@ -47,7 +46,7 @@ class CustomerReminder extends Mailable
             with: [
                 'yesUrl' => route('customer.response', ['response' => 'YES', 'id' => $this->customerPrompt->id]),
                 'noUrl' => route('customer.response', ['response' => 'NO', 'id' => $this->customerPrompt->id]),
-                'date' => $this->emailDate,
+                'pickupDate' => $this->customerPrompt->pickup_date->format('F j, Y'),
                 'customerName' => $this->customerName,
             ],
         );

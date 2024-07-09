@@ -127,18 +127,21 @@ class AdminController extends Controller
         //     return response()->json(['message' => 'Customer not found'], 404);
         // }
 
+        $pickupDate = $this->calculateDateFromDayOfWeek($customer->pickup_day);
+
         // Create a CustomerPrompt object
         $customerPrompt = new CustomerPrompt();
         $customerPrompt->customer_id = $customerId; // Associate with the customer ID
         $customerPrompt->response = Null; // Initial status
+        $customerPrompt->pickup_date = $pickupDate;
         $customerPrompt->save();
 
         // $formattedDate = date("F j, Y", strtotime($customer->pickup_day));
-        $formattedDate = $this->calculateDateFromDayOfWeek($customer->pickup_day);
+        //$formattedDate = $pickupDate->format('F j, Y');
 
 
         // Send the email
-        Mail::to($customer->contact_email)->send(new CustomerReminder($customerPrompt, $formattedDate, $customer->name));
+        Mail::to($customer->contact_email)->send(new CustomerReminder($customerPrompt, $customer->name));
 
         $test = $customer->contact_email;
 
@@ -158,18 +161,16 @@ class AdminController extends Controller
         $nextDate = clone $today;
         $nextDate->modify("+$daysToAdd days");
 
-        // Format the next date as desired
-        $nextDateFormatted = $nextDate->format('F j, Y');
+        // // Format the next date as desired
+        // $nextDateFormatted = $nextDate->format('F j, Y');
 
-        return $nextDateFormatted;
+        //return $nextDateFormatted;
+        return $nextDate;
     }
 
     // YES or NO from customer
     public function handleResponse($response, $id)
     {
-        // Calculate the pickupdate (today + 2 days)
-        $pickupdate = Carbon::now()->addDays(2);
-
         // Logic to handle the response based on $response and $id
         if ($response === 'YES') {
             // Handle approval logic
@@ -182,7 +183,7 @@ class AdminController extends Controller
             DriverPickup::create([
                 'customer_prompt_id' => $id,
                 'pickup_status' => 0,
-                'pickup_date' => $pickupdate,
+                'pickup_date' => $customerPrompt->pickup_date,
             ]);
         } elseif ($response === 'NO') {
             // Handle rejection logic
