@@ -24,26 +24,27 @@ class AdminController extends Controller
 
     public function getCustomerStatusData()
     {
-        $customers = Customer::select('customers.*')
-            ->with([
-                'prompts' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
-                },
-                'prompts.driverPickups' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
-                }
-            ])
+        $customers = Customer::with([
+            'prompts' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'prompts.driverPickups' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }
+        ])
             ->get()
             ->map(function ($customer) {
                 $latestPrompt = $customer->prompts->first();
+                // If there are no prompts, set the latest pickup to null
                 $latestPickup = $latestPrompt ? $latestPrompt->driverPickups->first() : null;
                 $lastSuccessfulPickup = $this->getLastSuccessfulPickup($customer->last_successful_pickup_id);
+                $currentStatus = $this->calculateStatus($latestPickup, $lastSuccessfulPickup, $latestPrompt);
                 return [
                     'customer' => $customer,
                     'latestPrompt' => $latestPrompt,
                     'latestPickup' => $latestPickup,
                     'lastSuccessfulPickup' => $lastSuccessfulPickup,
-                    'current_status' => $this->calculateStatus($latestPickup, $lastSuccessfulPickup, $latestPrompt),
+                    'current_status' => $currentStatus,
                 ];
             });
 
