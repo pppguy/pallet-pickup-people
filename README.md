@@ -1,1 +1,1 @@
-A simple Laravel/PHP project to demonsrate my skills.
+A simple Laravel/PHP project to demonstrate my skills.
